@@ -1,5 +1,6 @@
 package io.quarkus.arquillian;
 
+import static io.github.pixee.security.ObjectInputFilters.createSafeObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -228,7 +229,7 @@ public class QuarkusDeployableContainer implements DeployableContainer<QuarkusCo
             try (ObjectOutputStream a = new ObjectOutputStream(out)) {
                 a.writeObject(t);
                 a.close();
-                nt = (Throwable) new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
+                nt = (Throwable) createSafeObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
             } catch (Exception e) {
                 throw new DeploymentException("Unable to start the runtime runner", t);
             }

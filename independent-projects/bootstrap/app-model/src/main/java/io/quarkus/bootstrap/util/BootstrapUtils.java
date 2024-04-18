@@ -1,5 +1,6 @@
 package io.quarkus.bootstrap.util;
 
+import io.github.pixee.security.ObjectInputFilters;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -123,6 +124,7 @@ public class BootstrapUtils {
         if (Files.exists(modelPath)) {
             try (InputStream existing = Files.newInputStream(modelPath);
                     ObjectInputStream object = new ObjectInputStream(existing)) {
+                ObjectInputFilters.enableObjectFilterIfUnprotected(object);
                 ApplicationModel model = (ApplicationModel) object.readObject();
                 IoUtils.recursiveDelete(modelPath);
                 return model;

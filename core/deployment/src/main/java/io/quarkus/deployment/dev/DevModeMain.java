@@ -1,6 +1,7 @@
 
 package io.quarkus.deployment.dev;
 
+import static io.github.pixee.security.ObjectInputFilters.createSafeObjectInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.DataInputStream;
@@ -51,7 +52,7 @@ public class DevModeMain implements Closeable {
         try (InputStream devModeCp = DevModeMain.class.getClassLoader().getResourceAsStream(DEV_MODE_CONTEXT)) {
             DevModeContext context;
             try {
-                context = (DevModeContext) new ObjectInputStream(new DataInputStream(devModeCp)).readObject();
+                context = (DevModeContext) createSafeObjectInputStream(new DataInputStream(devModeCp)).readObject();
             } catch (Exception e) {
                 throw new RuntimeException(
                         "Unable to deserialize the dev mode context. Does the Quarkus plugin version match the version of Quarkus that is in use?",

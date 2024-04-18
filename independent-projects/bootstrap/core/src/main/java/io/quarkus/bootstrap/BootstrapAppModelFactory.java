@@ -1,5 +1,7 @@
 package io.quarkus.bootstrap;
 
+import io.github.pixee.security.ObjectInputFilters;
+import static io.github.pixee.security.ObjectInputFilters.createSafeObjectInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -208,7 +210,7 @@ public class BootstrapAppModelFactory {
             final Path p = Paths.get(serializedModel);
             if (Files.exists(p)) {
                 try (InputStream existing = Files.newInputStream(Paths.get(serializedModel))) {
-                    final ApplicationModel appModel = (ApplicationModel) new ObjectInputStream(existing).readObject();
+                    final ApplicationModel appModel = (ApplicationModel) createSafeObjectInputStream(existing).readObject();
                     return new CurationResult(appModel);
                 } catch (IOException | ClassNotFoundException e) {
                     log.error("Failed to load serialized app mode", e);
@@ -257,6 +259,7 @@ public class BootstrapAppModelFactory {
                         if (reader.readInt() == CP_CACHE_FORMAT_ID) {
                             if (reader.readInt() == workspace.getId()) {
                                 ObjectInputStream in = new ObjectInputStream(reader);
+                                ObjectInputFilters.enableObjectFilterIfUnprotected(in);
                                 ApplicationModel appModel = (ApplicationModel) in.readObject();
 
                                 log.debugf("Loaded cached AppModel %s from %s", appModel, cachedCpPath);

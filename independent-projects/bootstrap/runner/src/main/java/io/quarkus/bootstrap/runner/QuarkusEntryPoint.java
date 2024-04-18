@@ -1,5 +1,6 @@
 package io.quarkus.bootstrap.runner;
 
+import io.github.pixee.security.ObjectInputFilters;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -70,6 +71,7 @@ public class QuarkusEntryPoint {
             InvocationTargetException, NoSuchMethodException {
         try (ObjectInputStream in = new ObjectInputStream(
                 Files.newInputStream(appRoot.resolve(LIB_DEPLOYMENT_DEPLOYMENT_CLASS_PATH_DAT)))) {
+            ObjectInputFilters.enableObjectFilterIfUnprotected(in);
             List<String> paths = (List<String>) in.readObject();
             //yuck, should use runner class loader
             URLClassLoader loader = new URLClassLoader(paths.stream().map((s) -> {

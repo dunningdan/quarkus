@@ -1,5 +1,6 @@
 package io.quarkus.deployment.dev;
 
+import static io.github.pixee.security.ObjectInputFilters.createSafeObjectInputStream;
 import static io.quarkus.deployment.dev.testing.MessageFormat.BLUE;
 
 import java.io.ByteArrayInputStream;
@@ -406,7 +407,7 @@ public class IsolatedDevModeMain implements BiConsumer<CuratedApplication, Map<S
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 ObjectOutputStream oo = new ObjectOutputStream(out);
                 oo.writeObject(potentialContext);
-                context = (DevModeContext) new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
+                context = (DevModeContext) createSafeObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
             }
 
             augmentAction = new AugmentActionImpl(curatedApplication,

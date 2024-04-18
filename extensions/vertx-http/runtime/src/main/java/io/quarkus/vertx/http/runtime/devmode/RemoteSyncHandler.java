@@ -1,5 +1,6 @@
 package io.quarkus.vertx.http.runtime.devmode;
 
+import static io.github.pixee.security.ObjectInputFilters.createSafeObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.nio.charset.StandardCharsets;
@@ -131,7 +132,7 @@ public class RemoteSyncHandler implements Handler<HttpServerRequest> {
                     @Override
                     public void handle(Promise<Object> promise) {
                         try {
-                            Throwable problem = (Throwable) new ObjectInputStream(new ByteArrayInputStream(b.getBytes()))
+                            Throwable problem = (Throwable) createSafeObjectInputStream(new ByteArrayInputStream(b.getBytes()))
                                     .readObject();
                             //update the problem if it has changed
                             if (problem != null || remoteProblem != null) {
@@ -191,7 +192,7 @@ public class RemoteSyncHandler implements Handler<HttpServerRequest> {
                     r.nextBytes(sessionId);
                     currentSession = Base64.getEncoder().encodeToString(sessionId);
                     currentSessionCounter = 0;
-                    RemoteDevState state = (RemoteDevState) new ObjectInputStream(new ByteArrayInputStream(b.getBytes()))
+                    RemoteDevState state = (RemoteDevState) createSafeObjectInputStream(new ByteArrayInputStream(b.getBytes()))
                             .readObject();
                     remoteProblem = state.getAugmentProblem();
                     if (state.getAugmentProblem() != null) {

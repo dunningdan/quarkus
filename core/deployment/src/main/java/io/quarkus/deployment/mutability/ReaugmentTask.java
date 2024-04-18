@@ -1,5 +1,6 @@
 package io.quarkus.deployment.mutability;
 
+import io.github.pixee.security.ObjectInputFilters;
 import static io.quarkus.deployment.pkg.steps.JarResultBuildStep.BUILD_SYSTEM_PROPERTIES;
 import static io.quarkus.deployment.pkg.steps.JarResultBuildStep.DEPLOYMENT_LIB;
 import static io.quarkus.deployment.pkg.steps.JarResultBuildStep.LIB;
@@ -30,6 +31,7 @@ public class ReaugmentTask {
         Path buildSystemProps = appRoot.resolve(QUARKUS).resolve(BUILD_SYSTEM_PROPERTIES);
         try (ObjectInputStream in = new ObjectInputStream(
                 Files.newInputStream(deploymentLib.resolve(JarResultBuildStep.APPMODEL_DAT)))) {
+            ObjectInputFilters.enableObjectFilterIfUnprotected(in);
             Properties buildSystemProperties = new Properties();
             try (InputStream buildIn = Files
                     .newInputStream(buildSystemProps)) {

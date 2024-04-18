@@ -1,5 +1,6 @@
 package io.quarkus.it.rest;
 
+import io.github.pixee.security.ObjectInputFilters;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class ResourceLambda {
     private Object deserializeObject(ByteArrayOutputStream byteArrayOutputStream) throws IOException, ClassNotFoundException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        ObjectInputFilters.enableObjectFilterIfUnprotected(objectInputStream);
         return objectInputStream.readObject();
     }
 }

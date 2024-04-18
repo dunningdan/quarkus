@@ -1,5 +1,6 @@
 package io.quarkus.arquillian;
 
+import static io.github.pixee.security.ObjectInputFilters.createSafeObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -33,7 +34,7 @@ public class ClassLoaderExceptionTransformer {
                             ByteArrayOutputStream out = new ByteArrayOutputStream();
                             ObjectOutputStream oo = new ObjectOutputStream(out);
                             oo.writeObject(res);
-                            res = (Throwable) new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
+                            res = (Throwable) createSafeObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
                             testResult.setThrowable(res);
                         }
                     }

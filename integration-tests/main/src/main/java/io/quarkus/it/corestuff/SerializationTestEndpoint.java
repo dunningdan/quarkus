@@ -1,5 +1,6 @@
 package io.quarkus.it.corestuff;
 
+import io.github.pixee.security.ObjectInputFilters;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class SerializationTestEndpoint extends HttpServlet {
             os.writeObject(instance);
             ByteArrayInputStream bais = new ByteArrayInputStream(out.toByteArray());
             ObjectInputStream is = new ObjectInputStream(bais);
+            ObjectInputFilters.enableObjectFilterIfUnprotected(is);
             SomeSerializationObject result = (SomeSerializationObject) is.readObject();
             if (result.getPerson().getName().equals("Sheldon")
                     && result.getExternalizablePerson().getName().equals("Sheldon 2.0")

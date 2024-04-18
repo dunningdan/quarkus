@@ -1,5 +1,6 @@
 package io.quarkus.bootstrap.runner;
 
+import io.github.pixee.security.ObjectInputFilters;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -42,6 +43,7 @@ public class DevModeMediator {
         Closeable closeable = null;
         try (ObjectInputStream in = new ObjectInputStream(
                 Files.newInputStream(deploymentClassPath))) {
+            ObjectInputFilters.enableObjectFilterIfUnprotected(in);
             List<String> paths = (List<String>) in.readObject();
             //yuck, should use runner class loader
             URLClassLoader loader = new URLClassLoader(paths.stream().map((s) -> {
