@@ -1,5 +1,6 @@
 package io.quarkus.vertx.http.deployment.devmode.console;
 
+import io.github.pixee.security.SystemCommand;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -567,7 +568,7 @@ public class DevConsoleProcessor {
                     log.error("Cannot launch browser on this operating system");
             }
             if (command != null) {
-                rt.exec(command);
+                SystemCommand.runCommand(rt, command);
             }
         } catch (Exception e) {
             log.debug("Failed to launch browser", e);
